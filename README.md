@@ -1,39 +1,76 @@
 
-# 🐳 Docker Guide for Python, Streamlit & FastAPI Projects
+# 🐳 Docker Guide for Python, Streamlit & FastAPI Projects ![Docker Logo](https://user-images.githubusercontent.com/72096831/200459883-2ff14cb5-9378-4e5a-bbae-c8d423fb9220.png)
 
-![Docker Logo](https://user-images.githubusercontent.com/72096831/200459883-2ff14cb5-9378-4e5a-bbae-c8d423fb9220.png)
+A complete Docker workflow guide for Python-based applications including **Streamlit**, **FastAPI**, **GLPK (Pyomo)**, **Vector Databases**, and **Cloud Deployment (AWS & Azure)**.
 
-A complete Docker workflow guide for Python-based applications including **Streamlit**, **FastAPI**, and **GLPK (Pyomo)** with practical commands and error troubleshooting.
+
 
 ---
 
-## 📁 Dockerfile Examples
+## 📦 1. Install Docker (Mac & Windows)
+
+### 🍎 Mac (Docker Desktop)
+
+1. Download Docker Desktop:
+   👉 [https://www.docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop)
+
+2. Install and start Docker
+
+3. Verify installation:
+
+```bash
+docker --version
+docker run hello-world
+```
+
+---
+
+### 🪟 Windows (Using WSL2)
+
+#### Step 1: Install WSL
+
+```bash
+wsl --install
+```
+
+#### Step 2: Install Docker Desktop (with WSL backend)
+
+* Download Docker Desktop
+* Enable:
+
+  * ✅ WSL 2 integration
+  * ✅ Ubuntu (or your distro)
+
+#### Step 3: Verify
+
+```bash
+docker --version
+docker run hello-world
+```
+
+---
+
+## 📁 2. Dockerfile Examples
 
 ### 🐍 Basic Python App
 
 ```dockerfile
-# Use Python 3.8 base image
 FROM python:3.8
 
-# Set working directory
 WORKDIR /folder_name
 
-# Copy source code to container
 COPY . /folder_name
 
-# Install dependencies
 RUN pip install -r requirements.txt
 
-# Expose the application port
 EXPOSE 5000
 
-# Start the app
 CMD ["python", "run.py"]
 ```
 
 ---
 
-### 📊 Streamlit App with GLPK Support
+### 📊 Streamlit App with GLPK
 
 ```dockerfile
 FROM python:3.9-slim
@@ -54,7 +91,7 @@ ENTRYPOINT ["streamlit", "run", "main.py", "--server.port=8501", "--server.addre
 
 ---
 
-### ⚡ FastAPI App with GLPK Support
+### ⚡ FastAPI App
 
 ```dockerfile
 FROM python:3.10
@@ -75,106 +112,242 @@ CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 
 ---
 
-## 📦 Docker Image Commands
+## 📦 3. Docker Image Commands
 
-| Action                             | Command                                                                         |
-| ---------------------------------- | ------------------------------------------------------------------------------- |
-| 🔻 Pull image from Docker Hub      | `docker pull username/image_name`                                               |
-| ⬆️ Push image to Docker Hub        | `docker tag new_image username/image_name`<br>`docker push username/image_name` |
-| 📋 List local images               | `docker images`                                                                 |
-| ❌ Remove a specific image          | `docker rmi image_name`                                                         |
-| ❌❌ Remove all images               | `docker rmi -f $(docker images -q)`                                             |
-| 🔍 Search for images on Docker Hub | `docker search username`                                                        |
-| 🛠️ Build image from Dockerfile    | `docker build -t image_name .`                                                  |
-| 💾 Save image to `.tar` file       | `docker save image_name > file_name.tar`                                        |
-| 📦 Load image from `.tar` file     | Linux: `docker load -i file_name.tar`<br>Windows: `docker load < file_name.tar` |
+| Action         | Command                             |
+| -------------- | ----------------------------------- |
+| 🔻 Pull image  | `docker pull username/image_name`   |
+| ⬆️ Push image  | `docker push username/image_name`   |
+| 🛠 Build image | `docker build -t image_name .`      |
+| 📋 List images | `docker images`                     |
+| ❌ Remove image | `docker rmi image_name`             |
+| 💾 Save image  | `docker save image_name > file.tar` |
+| 📦 Load image  | `docker load -i file.tar`           |
 
 ---
 
-## 📦 Docker Container Commands
+## 📦 4. Docker Container Commands
 
-| Action                           | Command                                                               |
-| -------------------------------- | --------------------------------------------------------------------- |
-| ▶️ Start container               | `docker start container_name`                                         |
-| ⏹ Stop container                 | `docker stop container_name`                                          |
-| ⏹⏹ Stop all containers           | `docker stop $(docker ps -aq)`                                        |
-| 🗑 Remove a container            | `docker rm container_name`                                            |
-| 🧹 Remove all stopped containers | `docker rm $(docker ps -aq)`                                          |
-| 🔍 List all containers           | `docker ps -a`                                                        |
-| ▶️ List running containers       | `docker ps`                                                           |
-| 🔄 General Docker info           | `docker stats`, `docker info`                                         |
-| 💬 Enter container shell         | `docker exec -it container_id bash`<br>`docker attach container_name` |
+| Action              | Command                             |
+| ------------------- | ----------------------------------- |
+| ▶️ Run container    | `docker run -it image_name`         |
+| ⏹ Stop container    | `docker stop container_name`        |
+| 🗑 Remove container | `docker rm container_name`          |
+| 🔍 List containers  | `docker ps -a`                      |
+| 💬 Enter container  | `docker exec -it container_id bash` |
 
 ---
 
-## 🚀 Run Container from Image
-
-### Method 1: Create & Run Interactively
+## 🚀 5. Run Container
 
 ```bash
-docker run -it --name container_name image_name
-```
-
-### Method 2: Run with Port Mapping
-
-```bash
-docker run -td --name container_name -p 5000:5000 image_name
-```
-
-### Method 3: Detached Mode Only
-
-```bash
-docker run -p 5000:5000 -d image_name
+docker run -d -p 5000:5000 --name my_container image_name
 ```
 
 ---
 
-## 🛠 Docker Compose Workflow
+## 🧩 6. Docker Compose
 
 ```bash
-docker-compose down
 docker-compose up -d
+docker-compose down
 ```
-
-This stops, removes, and recreates containers with the updated Docker Compose configuration.
 
 ---
 
-## ❗ Troubleshooting: `pip` Connection Errors
-
-### ❌ Error Example:
-
-```
-WARNING: Retrying (Retry(total=3, ...)) after connection broken by 'NewConnectionError(...)'
-```
-
-### ✅ Solution: Add DNS to `/etc/resolv.conf`
-
-1. Open the DNS configuration file:
-
-   ```bash
-   sudo nano /etc/resolv.conf
-   ```
-
-2. Add the following lines:
-
-   ```bash
-   nameserver 8.8.8.8
-   nameserver 8.8.4.4
-   ```
-
-3. Save and close the file:
-
-   * In `nano`: Press `Ctrl + O` to save, `Ctrl + X` to exit.
-   * In `vi`: Press `Esc`, type `:wq`, and hit Enter.
+# 🔍 7. Run Vector Databases (OpenSearch & Elasticsearch)
 
 ---
 
-## ✅ Summary
+## 🟡 OpenSearch (Recommended for RAG / AI)
 
-This guide provides:
+### Pull Image
 
-* Dockerfiles for various Python-based applications.
-* Core Docker commands for managing images and containers.
-* Solutions for common connectivity issues (`pip` DNS errors).
-* Streamlit, FastAPI, and Pyomo integration examples.
+```bash
+docker pull opensearchproject/opensearch:latest
+```
+
+### Run Container
+
+```bash
+docker run -d \
+  -p 9200:9200 \
+  -p 9600:9600 \
+  -e "discovery.type=single-node" \
+  --name opensearch \
+  opensearchproject/opensearch:latest
+```
+
+### Access
+
+```
+http://localhost:9200
+```
+
+---
+
+## 🔵 Elasticsearch
+
+### Pull Image
+
+```bash
+docker pull elasticsearch:8.12.0
+```
+
+### Run Container
+
+```bash
+docker run -d \
+  -p 9200:9200 \
+  -e "discovery.type=single-node" \
+  --name elasticsearch \
+  elasticsearch:8.12.0
+```
+
+---
+
+## 📌 Notes
+
+* OpenSearch = better for **open-source + RAG**
+* Elasticsearch = enterprise + paid features
+
+---
+
+# 🏗 8. Build, Tag & Push Docker Image
+
+---
+
+## Step 1: Build Image
+
+```bash
+docker build -t my_app .
+```
+
+---
+
+## Step 2: Tag Image
+
+```bash
+docker tag my_app username/my_app:latest
+```
+
+---
+
+## Step 3: Login to Docker Hub
+
+```bash
+docker login
+```
+
+---
+
+## Step 4: Push Image
+
+```bash
+docker push username/my_app:latest
+```
+
+---
+
+# ☁️ 9. Push Docker Image to AWS (ECR)
+
+---
+
+## Step 1: Create ECR Repo
+
+```bash
+aws ecr create-repository --repository-name my_app
+```
+
+---
+
+## Step 2: Authenticate
+
+```bash
+aws ecr get-login-password --region ap-south-1 | \
+docker login --username AWS --password-stdin <account_id>.dkr.ecr.ap-south-1.amazonaws.com
+```
+
+---
+
+## Step 3: Tag Image
+
+```bash
+docker tag my_app:latest <account_id>.dkr.ecr.ap-south-1.amazonaws.com/my_app
+```
+
+---
+
+## Step 4: Push
+
+```bash
+docker push <account_id>.dkr.ecr.ap-south-1.amazonaws.com/my_app
+```
+
+---
+
+# ☁️ 10. Push Docker Image to Azure (ACR)
+
+---
+
+## Step 1: Login
+
+```bash
+az login
+```
+
+---
+
+## Step 2: Create Registry
+
+```bash
+az acr create --resource-group myGroup --name myRegistry --sku Basic
+```
+
+---
+
+## Step 3: Login to ACR
+
+```bash
+az acr login --name myRegistry
+```
+
+---
+
+## Step 4: Tag Image
+
+```bash
+docker tag my_app myregistry.azurecr.io/my_app
+```
+
+---
+
+## Step 5: Push
+
+```bash
+docker push myregistry.azurecr.io/my_app
+```
+
+---
+
+# 🔧 11. Troubleshooting: pip DNS Issue
+
+### Error:
+
+```
+Retrying after connection broken...
+```
+
+### Fix:
+
+```bash
+sudo nano /etc/resolv.conf
+```
+
+Add:
+
+```
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+```
+
